@@ -1,12 +1,15 @@
 import React from "react";
 import "react-native-gesture-handler";
 import { NavigationContainer } from "@react-navigation/native";
-import AppNavigator from "./navigators/AppNavigator";
+import AppDrawerNavigation from "./navigators/AppDrawerNavigation";
+import { Provider as PaperProvider } from "react-native-paper";
 
 export default function App() {
   return (
-    <NavigationContainer>
-      <AppNavigator />
-    </NavigationContainer>
+    <PaperProvider>
+      <NavigationContainer>
+        <AppDrawerNavigation />
+      </NavigationContainer>
+    </PaperProvider>
   );
 }
