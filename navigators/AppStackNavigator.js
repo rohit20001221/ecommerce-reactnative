@@ -36,6 +36,9 @@ const AppStackNavigator = () => {
           alignItems: "center",
           paddingHorizontal: 10,
         },
+        headerTitleStyle: {
+          fontFamily: "vollkorn-medium",
+        },
       })}
     >
       {/* Home Screen */}

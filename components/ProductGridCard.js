@@ -19,6 +19,8 @@ const ProductGridCard = ({ title, data }) => {
           style={{
             paddingVertical: 10,
             backgroundColor: "white",
+            fontFamily: "vollkorn-medium",
+            fontSize: 20,
           }}
         >
           {title}
