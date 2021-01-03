@@ -7,6 +7,7 @@ import Home from "../pages/Home";
 import Cart from "../pages/Cart";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import ProductList from "../pages/ProductList";
+import ProductDetail from "../pages/ProductDetail";
 
 const Stack = createStackNavigator();
 
@@ -72,6 +73,15 @@ const AppStackNavigator = () => {
           headerTitle: route.params.category,
         })}
         name="product_list"
+      />
+
+      {/* Product Detail */}
+      <Stack.Screen
+        component={ProductDetail}
+        name="product_detail"
+        options={({ navigation, route }) => ({
+          headerTitle: route.params.title,
+        })}
       />
     </Stack.Navigator>
   );
