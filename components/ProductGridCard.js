@@ -1,54 +1,61 @@
 import React from "react";
-import { View, Text, FlatList, ImageBackground } from "react-native";
+import {
+  View,
+  Text,
+  FlatList,
+  ImageBackground,
+  TouchableWithoutFeedback,
+} from "react-native";
+import { useNavigation } from "@react-navigation/native";
 
 const ProductGridCard = ({ title, data }) => {
+  const navigation = useNavigation();
   return (
-    <View style={{ backgroundColor: "#f5f6fa", padding: 3, marginBottom: 5 }}>
-      <Text
-        style={{
-          paddingVertical: 10,
-          backgroundColor: "white",
-          marginBottom: -1,
-        }}
-      >
-        {title}
-      </Text>
-      <FlatList
-        renderItem={({ item }) => {
-          return (
-            <View
-              style={{
-                height: 200,
-                flex: 1,
-                margin: 1,
-                backgroundColor: "white",
-              }}
-            >
-              <ImageBackground
-                source={{
-                  uri:
-                    "https://5.imimg.com/data5/EF/VD/MY-4119045/dell-laptop-500x500.jpg",
+    <TouchableWithoutFeedback
+      onPress={() => navigation.navigate("product_list", { category: title })}
+    >
+      <View style={{ backgroundColor: "white", padding: 5, marginBottom: 4 }}>
+        <Text
+          style={{
+            paddingVertical: 10,
+            backgroundColor: "white",
+          }}
+        >
+          {title}
+        </Text>
+        <FlatList
+          renderItem={({ item }) => {
+            return (
+              <View
+                style={{
+                  height: 200,
+                  flex: 1,
+                  backgroundColor: "white",
                 }}
-                style={{ flex: 1 }}
-              />
-              <Text>{item.title}</Text>
-            </View>
-          );
-        }}
-        data={data}
-        numColumns={2}
-      />
-      <View
-        style={{
-          alignItems: "flex-end",
-          backgroundColor: "white",
-          paddingVertical: 5,
-          marginTop: -1,
-        }}
-      >
-        <Text>more....</Text>
+              >
+                <ImageBackground
+                  source={{
+                    uri: item.image,
+                  }}
+                  style={{ flex: 1 }}
+                  resizeMode="contain"
+                />
+                {/* <Text>{item.title}</Text> */}
+              </View>
+            );
+          }}
+          data={data}
+          numColumns={2}
+        />
+        <View
+          style={{
+            alignItems: "flex-end",
+            backgroundColor: "white",
+            paddingVertical: 5,
+          }}
+        ></View>
       </View>
-    </View>
+    </TouchableWithoutFeedback>
   );
 };
 
