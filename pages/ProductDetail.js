@@ -87,7 +87,7 @@ const ProductDetail = () => {
       <View>
         <Button
           onPress={() => setSnackVisible(true)}
-          style={{ marginVertical: 5 }}
+          style={{ marginVertical: 5, backgroundColor: "black" }}
           mode="contained"
         >
           Add to cart

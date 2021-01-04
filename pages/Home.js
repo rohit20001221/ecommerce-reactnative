@@ -39,6 +39,8 @@ const Home = () => {
       <Searchbar style={{ borderRadius: 0, elevation: 1 }} />
       <ScrollView contentContainerStyle={{ padding: 10 }}>
         <ProductGridCard title={"Laptops"} data={data} />
+        <ProductGridCard title={"Laptops"} data={data} />
+        <ProductGridCard title={"Laptops"} data={data} />
         <View style={{ height: 100 }}></View>
       </ScrollView>
     </SafeAreaView>
