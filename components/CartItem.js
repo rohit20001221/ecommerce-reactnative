@@ -10,7 +10,7 @@ const CartItem = () => {
         elevation: 1,
         flexDirection: "row",
         backgroundColor: "white",
-        marginBottom: 5,
+        marginBottom: 2,
       }}
     >
       <ImageBackground
@@ -28,13 +28,12 @@ const CartItem = () => {
         <Text style={{ fontSize: 15, color: "brown", fontWeight: "bold" }}>
           $ 200
         </Text>
-        <Text style={{ fontSize: 15, color: "brown", fontWeight: "bold" }}>
-          QTY: 10
-        </Text>
+
         <View
           style={{
             flexDirection: "row",
             justifyContent: "flex-start",
+            alignItems: "center",
             marginVertical: 10,
           }}
         >
@@ -43,15 +42,24 @@ const CartItem = () => {
             style={{ backgroundColor: "lightgrey" }}
             mode="contained"
           >
-            ADD
+            +
           </Button>
-          <View style={{ width: 10 }}></View>
+          <Text
+            style={{
+              fontSize: 15,
+              color: "black",
+              fontWeight: "bold",
+              marginHorizontal: 10,
+            }}
+          >
+            10
+          </Text>
           <Button
             labelStyle={{ color: "black" }}
             style={{ backgroundColor: "lightgrey" }}
             mode="contained"
           >
-            REMOVE
+            -
           </Button>
         </View>
       </View>
