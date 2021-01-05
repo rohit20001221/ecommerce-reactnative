@@ -112,6 +112,7 @@ const Profile = () => {
           <View style={{ padding: 10, backgroundColor: "white" }}>
             <Title>{title}</Title>
             <TextInput
+              selectionColor="black"
               underlineColor="black"
               style={{ backgroundColor: "white", borderBottomColor: "black" }}
             />

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import { View, ScrollView, SafeAreaView, Text } from "react-native";
-import { Title, Button, DataTable, Snackbar } from "react-native-paper";
+import { View, ScrollView, SafeAreaView, Text, Animated } from "react-native";
+import { Title, Button, DataTable } from "react-native-paper";
 import { FlatListSlider } from "react-native-flatlist-slider";
 import Rating from "../components/Rating";
 import { Ionicons } from "@expo/vector-icons";
@@ -20,14 +20,44 @@ images = images.map((item) => {
 
 const ProductDetail = () => {
   const [snackVisible, setSnackVisible] = useState(false);
+  const [fadeValue, setFadeValue] = useState(new Animated.Value(1));
   const navigation = useNavigation();
 
-  const onDismissSnack = () => {
-    setSnackVisible(false);
+  const dismissSnack = () => {
+    setTimeout(() => {
+      setSnackVisible(false);
+    }, 2000);
+  };
+
+  const _start = () => {
+    Animated.timing(fadeValue, {
+      toValue: 0,
+      duration: 2000,
+      useNativeDriver: true,
+    }).start();
   };
 
   return (
     <SafeAreaView style={{ padding: 10, backgroundColor: "white", flex: 1 }}>
+      {snackVisible ? (
+        <Animated.View style={{ opacity: fadeValue }}>
+          <View
+            style={{
+              height: 50,
+              backgroundColor: "#22BB33",
+              marginHorizontal: -10,
+              marginTop: -10,
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            <Text style={{ fontWeight: "bold", color: "white" }}>
+              Item added !
+            </Text>
+          </View>
+        </Animated.View>
+      ) : null}
+
       <ScrollView>
         <Title style={{ marginBottom: 15 }}>
           Dell Inspiron 3543 Notebook (5th Gen Ci5/ 8GB/ 1TB/ Win8.1/ 2GB Graph)
@@ -39,8 +69,7 @@ const ProductDetail = () => {
           data={images}
           height={240}
           timer={5000}
-          // onPress={() => {}}
-          //   contentContainerStyle={{ paddingHorizontal: 16 }}
+          onPress={() => {}}
           indicatorContainerStyle={{ position: "absolute", bottom: 20 }}
           indicatorActiveColor={"#8e44ad"}
           indicatorInActiveColor={"#ffffff"}
@@ -86,27 +115,17 @@ const ProductDetail = () => {
       </ScrollView>
       <View>
         <Button
-          onPress={() => setSnackVisible(true)}
+          onPress={() => {
+            setSnackVisible(true);
+            _start();
+            dismissSnack();
+          }}
           style={{ marginVertical: 5, backgroundColor: "black" }}
           mode="contained"
         >
           Add to cart
         </Button>
       </View>
-      <Snackbar
-        style={{ width: "100%" }}
-        duration={2000}
-        action={{
-          label: "GO TO CART",
-          onPress: () => {
-            navigation.navigate("cart");
-          },
-        }}
-        visible={snackVisible}
-        onDismiss={onDismissSnack}
-      >
-        Item added to cart
-      </Snackbar>
     </SafeAreaView>
   );
 };

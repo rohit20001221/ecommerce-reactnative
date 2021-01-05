@@ -1,6 +1,7 @@
 import React from "react";
 import { View, Text, ImageBackground } from "react-native";
-import { Button } from "react-native-paper";
+import { AntDesign } from "@expo/vector-icons";
+import { Button, IconButton } from "react-native-paper";
 
 const CartItem = () => {
   return (
@@ -37,13 +38,9 @@ const CartItem = () => {
             marginVertical: 10,
           }}
         >
-          <Button
-            labelStyle={{ color: "black" }}
-            style={{ backgroundColor: "lightgrey" }}
-            mode="contained"
-          >
-            +
-          </Button>
+          <IconButton
+            icon={() => <AntDesign name="pluscircle" size={24} color="black" />}
+          />
           <Text
             style={{
               fontSize: 15,
@@ -54,13 +51,11 @@ const CartItem = () => {
           >
             10
           </Text>
-          <Button
-            labelStyle={{ color: "black" }}
-            style={{ backgroundColor: "lightgrey" }}
-            mode="contained"
-          >
-            -
-          </Button>
+          <IconButton
+            icon={() => (
+              <AntDesign name="minuscircle" size={24} color="black" />
+            )}
+          />
         </View>
       </View>
     </View>
