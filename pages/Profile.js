@@ -91,7 +91,7 @@ const Profile = () => {
           right={() => (
             <IconButton
               onPress={() => {
-                setTitle("Name");
+                setTitle("Mobile");
                 setModalVisible(true);
               }}
               icon="pencil"
