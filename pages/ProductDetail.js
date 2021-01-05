@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, ScrollView, SafeAreaView, Text, Animated } from "react-native";
+import { View, ScrollView, SafeAreaView, Animated } from "react-native";
 import { Title, Button, DataTable } from "react-native-paper";
 import { FlatListSlider } from "react-native-flatlist-slider";
 import Rating from "../components/Rating";
@@ -7,6 +7,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { Entypo } from "@expo/vector-icons";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
+import SnackBar from "../components/SnackBar";
 
 var images = [
   "https://image1.pricedekho.com/p/3/9/49/2492749/10449333-dell-15-5559-ci34gb1tbwin10156-inches-red-picture-large.jpg",
@@ -23,39 +24,10 @@ const ProductDetail = () => {
   const [fadeValue, setFadeValue] = useState(new Animated.Value(1));
   const navigation = useNavigation();
 
-  const dismissSnack = () => {
-    setTimeout(() => {
-      setSnackVisible(false);
-    }, 2000);
-  };
-
-  const _start = () => {
-    Animated.timing(fadeValue, {
-      toValue: 0,
-      duration: 2000,
-      useNativeDriver: true,
-    }).start();
-  };
-
   return (
     <SafeAreaView style={{ padding: 10, backgroundColor: "white", flex: 1 }}>
       {snackVisible ? (
-        <Animated.View style={{ opacity: fadeValue }}>
-          <View
-            style={{
-              height: 50,
-              backgroundColor: "#22BB33",
-              marginHorizontal: -10,
-              marginTop: -10,
-              justifyContent: "center",
-              alignItems: "center",
-            }}
-          >
-            <Text style={{ fontWeight: "bold", color: "white" }}>
-              Item added !
-            </Text>
-          </View>
-        </Animated.View>
+        <SnackBar fadeValue={fadeValue} setSnackVisible={setSnackVisible} />
       ) : null}
 
       <ScrollView>
@@ -117,8 +89,6 @@ const ProductDetail = () => {
         <Button
           onPress={() => {
             setSnackVisible(true);
-            _start();
-            dismissSnack();
           }}
           style={{ marginVertical: 5, backgroundColor: "black" }}
           mode="contained"
