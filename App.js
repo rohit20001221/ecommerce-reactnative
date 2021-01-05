@@ -4,6 +4,8 @@ import { NavigationContainer } from "@react-navigation/native";
 import AppDrawerNavigation from "./navigators/AppDrawerNavigation";
 import { Provider as PaperProvider } from "react-native-paper";
 import AppLoading from "expo-app-loading";
+import { StateProvider } from "./StateProvider";
+import reducer, { initialState } from "./reducer";
 
 import { useFonts } from "expo-font";
 
@@ -17,10 +19,12 @@ export default function App() {
   }
 
   return (
-    <PaperProvider>
-      <NavigationContainer>
-        <AppDrawerNavigation />
-      </NavigationContainer>
-    </PaperProvider>
+    <StateProvider initialState={initialState} reducer={reducer}>
+      <PaperProvider>
+        <NavigationContainer>
+          <AppDrawerNavigation />
+        </NavigationContainer>
+      </PaperProvider>
+    </StateProvider>
   );
 }
