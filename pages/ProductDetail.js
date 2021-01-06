@@ -1,13 +1,16 @@
 import React, { useState } from "react";
-import { View, ScrollView, SafeAreaView, Animated } from "react-native";
-import { Title, Button, DataTable } from "react-native-paper";
+import { View, ScrollView, SafeAreaView, Animated, Text } from "react-native";
+import { Button, DataTable } from "react-native-paper";
 import { FlatListSlider } from "react-native-flatlist-slider";
 import Rating from "../components/Rating";
 import { Ionicons } from "@expo/vector-icons";
 import { Entypo } from "@expo/vector-icons";
 import { FontAwesome5 } from "@expo/vector-icons";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, useRoute } from "@react-navigation/native";
 import SnackBar from "../components/SnackBar";
+import { useEffect } from "react";
+import { config } from "../config";
+import DataLoading from "../components/DataLoading";
 
 var images = [
   "https://image1.pricedekho.com/p/3/9/49/2492749/10449333-dell-15-5559-ci34gb1tbwin10156-inches-red-picture-large.jpg",
@@ -21,8 +24,34 @@ images = images.map((item) => {
 
 const ProductDetail = () => {
   const [snackVisible, setSnackVisible] = useState(false);
+  const [dataLoaded, setDataLoaded] = useState(false);
   const [fadeValue, setFadeValue] = useState(new Animated.Value(1));
+  const [product, setProduct] = useState({
+    title: "",
+    price: null,
+    images: [],
+    rating: 0,
+    quantity: 0,
+    category: {
+      _id: "",
+      name: "",
+    },
+  });
   const navigation = useNavigation();
+  const route = useRoute();
+
+  useEffect(() => {
+    fetch(`${config.serverUrl}/products/${route.params.id}`)
+      .then((res) => res.json())
+      .then((data) => {
+        setProduct(data);
+        setDataLoaded(true);
+      });
+  }, []);
+
+  if (!dataLoaded) {
+    return <DataLoading size="large" color="black" />;
+  }
 
   return (
     <SafeAreaView style={{ padding: 10, backgroundColor: "white", flex: 1 }}>
@@ -30,15 +59,14 @@ const ProductDetail = () => {
         <SnackBar fadeValue={fadeValue} setSnackVisible={setSnackVisible} />
       ) : null}
 
-      <ScrollView>
-        <Title style={{ marginBottom: 15 }}>
-          Dell Inspiron 3543 Notebook (5th Gen Ci5/ 8GB/ 1TB/ Win8.1/ 2GB Graph)
-          (X560333IN9) (39.624 cm, Black)
-        </Title>
-        {/* <View style={{ padding: 10 }}></View> */}
-
+      <ScrollView showsVerticalScrollIndicator={false}>
+        <Text style={{ marginBottom: 15, fontWeight: "bold", fontSize: 15 }}>
+          {product.title}
+        </Text>
         <FlatListSlider
-          data={images}
+          data={product.images.map((item) => {
+            return { image: item };
+          })}
           height={240}
           timer={5000}
           onPress={() => {}}
@@ -58,14 +86,14 @@ const ProductDetail = () => {
               <Ionicons name="md-pricetag" size={24} color="black" />
             </DataTable.Cell>
             <DataTable.Cell>Price</DataTable.Cell>
-            <DataTable.Cell>$ 200</DataTable.Cell>
+            <DataTable.Cell>$ {product.price}</DataTable.Cell>
           </DataTable.Row>
           <DataTable.Row>
             <DataTable.Cell>
               <Ionicons name="md-cart" size={24} color="black" />
             </DataTable.Cell>
             <DataTable.Cell>Category</DataTable.Cell>
-            <DataTable.Cell>Laptops</DataTable.Cell>
+            <DataTable.Cell>{product.category.name}</DataTable.Cell>
           </DataTable.Row>
           <DataTable.Row>
             <DataTable.Cell>
@@ -73,7 +101,7 @@ const ProductDetail = () => {
             </DataTable.Cell>
             <DataTable.Cell>Rating</DataTable.Cell>
             <DataTable.Cell>
-              <Rating size={20} rating={4} />
+              <Rating size={20} rating={product.rating} />
             </DataTable.Cell>
           </DataTable.Row>
           <DataTable.Row>
@@ -81,7 +109,7 @@ const ProductDetail = () => {
               <Entypo name="shopping-bag" size={24} color="black" />
             </DataTable.Cell>
             <DataTable.Cell>In Stock</DataTable.Cell>
-            <DataTable.Cell>18</DataTable.Cell>
+            <DataTable.Cell>{product.quantity}</DataTable.Cell>
           </DataTable.Row>
         </DataTable>
       </ScrollView>

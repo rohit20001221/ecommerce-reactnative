@@ -8,11 +8,13 @@ import {
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 
-const ProductGridCard = ({ title, data }) => {
+const ProductGridCard = ({ title, data, id }) => {
   const navigation = useNavigation();
   return (
     <TouchableWithoutFeedback
-      onPress={() => navigation.navigate("product_list", { category: title })}
+      onPress={() =>
+        navigation.navigate("product_list", { category: title, id: id })
+      }
     >
       <View style={{ backgroundColor: "white", padding: 5, marginBottom: 4 }}>
         <Text
@@ -37,7 +39,7 @@ const ProductGridCard = ({ title, data }) => {
               >
                 <ImageBackground
                   source={{
-                    uri: item.image,
+                    uri: item,
                   }}
                   style={{ flex: 1 }}
                   resizeMode="contain"
@@ -47,6 +49,7 @@ const ProductGridCard = ({ title, data }) => {
             );
           }}
           data={data}
+          keyExtractor={(item, index) => index}
           numColumns={2}
         />
         <View
