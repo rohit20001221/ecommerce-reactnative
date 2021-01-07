@@ -1,18 +1,28 @@
 import React, { useEffect, useState } from "react";
-import { View, ScrollView, SafeAreaView, LogBox } from "react-native";
+import { View, ScrollView, SafeAreaView } from "react-native";
+import { LogBox } from "react-native";
 import { Searchbar } from "react-native-paper";
+import DataLoading from "../components/DataLoading";
 import ProductGridCard from "../components/ProductGridCard";
 import { config } from "../config";
 
 const Home = () => {
   const [categories, setCategories] = useState([]);
+  const [dataLoaded, setDataLoaded] = useState(false);
+
   useEffect(() => {
     LogBox.ignoreLogs(["VirtualizedLists should never be nested"]);
     fetch(`${config.serverUrl}/categories`)
       .then((res) => res.json())
-      .then((data) => setCategories(data))
+      .then((data) => {
+        setCategories(data), setDataLoaded(true);
+      })
       .catch((err) => console.log(err.message));
   }, []);
+
+  if (!dataLoaded) {
+    return <DataLoading size="large" color="black" />;
+  }
 
   return (
     <SafeAreaView>

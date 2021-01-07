@@ -1,3 +1,3 @@
 export const config = {
-  serverUrl: "https://cae028b08550.ngrok.io",
+  serverUrl: "http://192.168.1.10:4000",
 };

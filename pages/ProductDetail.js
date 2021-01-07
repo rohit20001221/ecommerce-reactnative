@@ -11,6 +11,7 @@ import SnackBar from "../components/SnackBar";
 import { useEffect } from "react";
 import { config } from "../config";
 import DataLoading from "../components/DataLoading";
+import { useStateValue } from "../StateProvider";
 
 var images = [
   "https://image1.pricedekho.com/p/3/9/49/2492749/10449333-dell-15-5559-ci34gb1tbwin10156-inches-red-picture-large.jpg",
@@ -18,14 +19,11 @@ var images = [
   "https://image1.pricedekho.com/p/3/0/70/3027270/38018653-lenovo-ideapad-500-80nt00pain-notebook-picture-big.jpg?tr=w-420",
 ];
 
-images = images.map((item) => {
-  return { image: item };
-});
-
 const ProductDetail = () => {
   const [snackVisible, setSnackVisible] = useState(false);
   const [dataLoaded, setDataLoaded] = useState(false);
   const [fadeValue, setFadeValue] = useState(new Animated.Value(1));
+
   const [product, setProduct] = useState({
     title: "",
     price: null,
@@ -36,9 +34,11 @@ const ProductDetail = () => {
       _id: "",
       name: "",
     },
+    cover: "",
   });
-  const navigation = useNavigation();
+  // const navigation = useNavigation();
   const route = useRoute();
+  const [{}, dispatch] = useStateValue();
 
   useEffect(() => {
     fetch(`${config.serverUrl}/products/${route.params.id}`)
@@ -116,6 +116,16 @@ const ProductDetail = () => {
       <View>
         <Button
           onPress={() => {
+            dispatch({
+              type: "ADD_TO_CART",
+              item: {
+                title: product.title,
+                image: product.cover,
+                price: product.price,
+                quantity: 1,
+                id: route.params.id,
+              },
+            });
             setSnackVisible(true);
           }}
           style={{ marginVertical: 5, backgroundColor: "black" }}

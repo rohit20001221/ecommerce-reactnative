@@ -1,8 +1,12 @@
 import React from "react";
 import { View, Text } from "react-native";
 import { DataTable } from "react-native-paper";
+import { getSubtotal } from "../reducer";
+import { useStateValue } from "../StateProvider";
 
 const PriceCard = () => {
+  const [{ cart }] = useStateValue();
+  const subTotal = getSubtotal(cart);
   return (
     <DataTable
       style={{ backgroundColor: "white", elevation: 1, marginBottom: 2 }}
@@ -16,7 +20,7 @@ const PriceCard = () => {
       </DataTable.Header>
       <DataTable.Row>
         <DataTable.Cell>Sub Total</DataTable.Cell>
-        <DataTable.Cell>$ 200</DataTable.Cell>
+        <DataTable.Cell>$ {subTotal}</DataTable.Cell>
       </DataTable.Row>
       <DataTable.Row>
         <DataTable.Cell>Shipping</DataTable.Cell>
@@ -28,7 +32,7 @@ const PriceCard = () => {
       </DataTable.Row>
       <DataTable.Row>
         <DataTable.Cell>Total</DataTable.Cell>
-        <DataTable.Cell>$ {210 - 0.1 * 210}</DataTable.Cell>
+        <DataTable.Cell>$ {(1 - 0.1) * (subTotal + 10)}</DataTable.Cell>
       </DataTable.Row>
     </DataTable>
   );

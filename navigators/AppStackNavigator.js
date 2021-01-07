@@ -8,10 +8,13 @@ import Cart from "../pages/Cart";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import ProductList from "../pages/ProductList";
 import ProductDetail from "../pages/ProductDetail";
+import { useStateValue } from "../StateProvider";
 
 const Stack = createStackNavigator();
 
 const AppStackNavigator = () => {
+  const [{ cart }] = useStateValue();
+
   return (
     <Stack.Navigator
       screenOptions={({ navigation }) => ({
@@ -21,13 +24,15 @@ const AppStackNavigator = () => {
               <TouchableOpacity onPress={() => navigation.navigate("cart")}>
                 <Ionicons name="md-cart" size={30} color="black" />
               </TouchableOpacity>
-              <Badge
-                style={{ position: "absolute", top: -5, right: -1 }}
-                visible
-                size={15}
-              >
-                10
-              </Badge>
+              {cart?.length > 0 ? (
+                <Badge
+                  style={{ position: "absolute", top: -5, right: -1 }}
+                  visible
+                  size={15}
+                >
+                  {cart?.length}
+                </Badge>
+              ) : null}
             </View>,
           ];
         },

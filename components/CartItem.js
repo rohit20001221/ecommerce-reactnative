@@ -2,12 +2,15 @@ import React from "react";
 import { View, Text, ImageBackground } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
 import { Button, IconButton } from "react-native-paper";
+import { useStateValue } from "../StateProvider";
 
-const CartItem = () => {
+const CartItem = ({ title, image, price, quantity, id }) => {
+  const [{}, dispatch] = useStateValue();
+
   return (
     <View
       style={{
-        height: 200,
+        height: 300,
         elevation: 1,
         flexDirection: "row",
         backgroundColor: "white",
@@ -16,18 +19,15 @@ const CartItem = () => {
     >
       <ImageBackground
         source={{
-          uri:
-            "https://image1.pricedekho.com/p/3/9/49/2492749/10449333-dell-15-5559-ci34gb1tbwin10156-inches-red-picture-large.jpg",
+          uri: image,
         }}
-        resizeMode="stretch"
+        resizeMode="contain"
         style={{ flex: 0.4 }}
       />
       <View style={{ flex: 0.6, padding: 10 }}>
-        <Text style={{ fontWeight: "bold", fontSize: 15 }}>
-          Dell 15-5559 (Ci3/4GB/1TB/Win10/15.6 Inches) Red
-        </Text>
+        <Text style={{ fontWeight: "bold", fontSize: 12 }}>{title}</Text>
         <Text style={{ fontSize: 15, color: "brown", fontWeight: "bold" }}>
-          $ 200
+          $ {price}
         </Text>
 
         <View
@@ -40,6 +40,13 @@ const CartItem = () => {
         >
           <IconButton
             icon={() => <AntDesign name="pluscircle" size={24} color="black" />}
+            onPress={() => {
+              dispatch({
+                type: "UPDATE_CART_ITEM",
+                id: id,
+                update: 1,
+              });
+            }}
           />
           <Text
             style={{
@@ -49,12 +56,19 @@ const CartItem = () => {
               marginHorizontal: 10,
             }}
           >
-            10
+            {quantity}
           </Text>
           <IconButton
             icon={() => (
               <AntDesign name="minuscircle" size={24} color="black" />
             )}
+            onPress={() => {
+              dispatch({
+                type: "UPDATE_CART_ITEM",
+                id: id,
+                update: -1,
+              });
+            }}
           />
         </View>
       </View>
