@@ -16,6 +16,12 @@ const reducer = (state, action) => {
   var cart, cart_item;
   switch (action.type) {
     case "ADD_TO_CART":
+      cart_item = state.cart.filter((i) => i.id === action.item.id);
+      if (cart_item.length > 0) {
+        action.setTitle("Item already added!");
+        return state;
+      }
+
       return { ...state, cart: [...state.cart, action.item] };
     case "UPDATE_CART_ITEM":
       cart_item = state.cart.filter((i) => i.id === action.id)[0];

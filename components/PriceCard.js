@@ -4,12 +4,17 @@ import { DataTable } from "react-native-paper";
 import { getSubtotal } from "../reducer";
 import { useStateValue } from "../StateProvider";
 
-const PriceCard = () => {
+const PriceCard = (props) => {
   const [{ cart }] = useStateValue();
   const subTotal = getSubtotal(cart);
   return (
     <DataTable
-      style={{ backgroundColor: "white", elevation: 1, marginBottom: 2 }}
+      style={{
+        backgroundColor: "white",
+        elevation: 1,
+        marginBottom: 2,
+        ...props.style,
+      }}
     >
       <DataTable.Header>
         <DataTable.Title>

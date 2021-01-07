@@ -1,9 +1,17 @@
 import React from "react";
-import { SafeAreaView, ScrollView, View } from "react-native";
+import {
+  SafeAreaView,
+  ScrollView,
+  View,
+  FlatList,
+  Dimensions,
+} from "react-native";
 import { Title, Button } from "react-native-paper";
 import CartItem from "../components/CartItem";
 import PriceCard from "../components/PriceCard";
 import { useStateValue } from "../StateProvider";
+
+const window = Dimensions.get("window");
 
 const Cart = () => {
   const [{ cart }] = useStateValue();
@@ -17,13 +25,21 @@ const Cart = () => {
   }
 
   return (
-    <SafeAreaView style={{ padding: 10 }}>
-      <ScrollView showsVerticalScrollIndicator={false}>
-        <PriceCard />
-        <Title style={{ backgroundColor: "white", padding: 10, elevation: 1 }}>
-          Items
-        </Title>
-        {cart.map((item) => {
+    <View style={{ padding: 10, flex: 1 }}>
+      <PriceCard />
+      <Title
+        style={{
+          backgroundColor: "white",
+          padding: 10,
+          elevation: 1,
+        }}
+      >
+        Items
+      </Title>
+      <FlatList
+        showsVerticalScrollIndicator={false}
+        data={cart}
+        renderItem={({ item }) => {
           return (
             <CartItem
               title={item.title}
@@ -34,16 +50,25 @@ const Cart = () => {
               key={item.id}
             />
           );
-        })}
+        }}
+        keyExtractor={(item) => item.id}
+      />
+      <View
+        style={{
+          position: "absolute",
+          bottom: 0,
+          width: window.width,
+        }}
+      >
         <Button
           labelStyle={{ color: "white" }}
-          style={{ backgroundColor: "black" }}
+          style={{ backgroundColor: "black", borderRadius: 0, padding: 10 }}
           mode="contained"
         >
           Proceed to pay
         </Button>
-      </ScrollView>
-    </SafeAreaView>
+      </View>
+    </View>
   );
 };
 

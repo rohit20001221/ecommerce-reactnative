@@ -1,7 +1,7 @@
 import React from "react";
 import { View, Text, Animated } from "react-native";
 
-const SnackBar = ({ fadeValue, setSnackVisible }) => {
+const SnackBar = ({ fadeValue, setSnackVisible, title = "Item added !" }) => {
   const dismissSnack = () => {
     setTimeout(() => {
       setSnackVisible(false);
@@ -31,7 +31,7 @@ const SnackBar = ({ fadeValue, setSnackVisible }) => {
           alignItems: "center",
         }}
       >
-        <Text style={{ fontWeight: "bold", color: "white" }}>Item added !</Text>
+        <Text style={{ fontWeight: "bold", color: "white" }}>{title}</Text>
       </View>
     </Animated.View>
   );

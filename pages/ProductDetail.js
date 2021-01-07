@@ -23,6 +23,7 @@ const ProductDetail = () => {
   const [snackVisible, setSnackVisible] = useState(false);
   const [dataLoaded, setDataLoaded] = useState(false);
   const [fadeValue, setFadeValue] = useState(new Animated.Value(1));
+  const [title, setTitle] = useState("Item added!");
 
   const [product, setProduct] = useState({
     title: "",
@@ -56,7 +57,11 @@ const ProductDetail = () => {
   return (
     <SafeAreaView style={{ padding: 10, backgroundColor: "white", flex: 1 }}>
       {snackVisible ? (
-        <SnackBar fadeValue={fadeValue} setSnackVisible={setSnackVisible} />
+        <SnackBar
+          title={title}
+          fadeValue={fadeValue}
+          setSnackVisible={setSnackVisible}
+        />
       ) : null}
 
       <ScrollView showsVerticalScrollIndicator={false}>
@@ -125,6 +130,7 @@ const ProductDetail = () => {
                 quantity: 1,
                 id: route.params.id,
               },
+              setTitle: setTitle,
             });
             setSnackVisible(true);
           }}
