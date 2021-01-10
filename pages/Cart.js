@@ -4,13 +4,17 @@ import { Title, Button } from "react-native-paper";
 import CartItem from "../components/CartItem";
 import PriceCard from "../components/PriceCard";
 import { useStateValue } from "../StateProvider";
-import * as Linking from "expo-linking";
+import { useNavigation } from "@react-navigation/native";
 import { config } from "../config";
+import { getSubtotal } from "../reducer";
+// import * as Linking from "expo-linking";
+// import { config } from "../config";
 
 const window = Dimensions.get("window");
 
 const Cart = () => {
   const [{ cart }] = useStateValue();
+  const navigation = useNavigation();
 
   if (cart.length <= 0) {
     return (
@@ -61,7 +65,18 @@ const Cart = () => {
           style={{ backgroundColor: "black", borderRadius: 0, padding: 10 }}
           mode="contained"
           onPress={() => {
-            Linking.openURL(`${config.serverUrl}/payment`);
+            // Linking.openURL(`${config.serverUrl}/payment`);
+            // navigation.navigate("payment");
+            fetch(config.serverUrl + "/generate_payment", {
+              method: "POST",
+              body: JSON.stringify({ amount: getSubtotal(cart) }),
+              headers: { "Content-Type": "application/json" },
+            })
+              .then((res) => res.json())
+              .then((data) => {
+                // console.log(data)
+                navigation.navigate("payment", { order_id: data.order_id });
+              });
           }}
         >
           Proceed to pay

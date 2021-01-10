@@ -9,6 +9,7 @@ import { TouchableOpacity } from "react-native-gesture-handler";
 import ProductList from "../pages/ProductList";
 import ProductDetail from "../pages/ProductDetail";
 import { useStateValue } from "../StateProvider";
+import Payment from "../pages/Payment";
 
 const Stack = createStackNavigator();
 
@@ -89,6 +90,13 @@ const AppStackNavigator = () => {
         name="product_detail"
         options={({ navigation, route }) => ({
           headerTitle: route.params.title,
+        })}
+      />
+      <Stack.Screen
+        component={Payment}
+        name="payment"
+        options={({ navigation, route }) => ({
+          headerShown: false,
         })}
       />
     </Stack.Navigator>
