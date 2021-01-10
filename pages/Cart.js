@@ -1,15 +1,11 @@
 import React from "react";
-import {
-  SafeAreaView,
-  ScrollView,
-  View,
-  FlatList,
-  Dimensions,
-} from "react-native";
+import { View, FlatList, Dimensions } from "react-native";
 import { Title, Button } from "react-native-paper";
 import CartItem from "../components/CartItem";
 import PriceCard from "../components/PriceCard";
 import { useStateValue } from "../StateProvider";
+import * as Linking from "expo-linking";
+import { config } from "../config";
 
 const window = Dimensions.get("window");
 
@@ -64,6 +60,9 @@ const Cart = () => {
           labelStyle={{ color: "white" }}
           style={{ backgroundColor: "black", borderRadius: 0, padding: 10 }}
           mode="contained"
+          onPress={() => {
+            Linking.openURL(`${config.serverUrl}/payment`);
+          }}
         >
           Proceed to pay
         </Button>
