@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { View, Modal, TouchableWithoutFeedback } from "react-native";
+import React, { useState, useEffect } from "react";
+import { View, Modal, TouchableWithoutFeedback, Linking } from "react-native";
 import {
   Avatar,
   Divider,
@@ -13,11 +13,45 @@ import { useNavigation } from "@react-navigation/native";
 import { FontAwesome } from "@expo/vector-icons";
 import { MaterialIcons } from "@expo/vector-icons";
 import Header from "../components/Header";
+import { config } from "../config";
 
 const Profile = () => {
   const navigation = useNavigation();
   const [modalVisible, setModalVisible] = useState(false);
+  const [user, setUser] = useState(null);
   const [title, setTitle] = useState("");
+
+  useEffect(() => {
+    Linking.addEventListener("url", ({ url }) => {
+      const token = url.match(/token=([^#]+)/);
+      setUser(token[1]);
+    });
+
+    return () => {
+      Linking.removeEventListener("url");
+    };
+  }, []);
+
+  if (!user) {
+    return (
+      <View style={{ flex: 1 }}>
+        <Header />
+        <View
+          style={{ flex: 1, alignItems: "center", justifyContent: "center" }}
+        >
+          <Button
+            style={{ backgroundColor: "red" }}
+            onPress={() => {
+              Linking.openURL(`${config.serverUrl}/users/auth/google`);
+            }}
+            mode="contained"
+          >
+            Google
+          </Button>
+        </View>
+      </View>
+    );
+  }
 
   return (
     <View>
@@ -58,7 +92,7 @@ const Profile = () => {
             />
           )}
           title="Name"
-          description="J.Rohit Sai Nagarjuna Reddy"
+          description={user}
         />
         <List.Item
           left={(props) => (
