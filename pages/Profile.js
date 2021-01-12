@@ -10,6 +10,7 @@ import {
   IconButton,
 } from "react-native-paper";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import DataLoading from "../components/DataLoading";
 import { useNavigation } from "@react-navigation/native";
 import { FontAwesome } from "@expo/vector-icons";
 import { MaterialIcons } from "@expo/vector-icons";
@@ -21,27 +22,44 @@ const setStorageItem = async (key, value) => {
   await AsyncStorage.setItem(key, value);
 };
 
-const getStorageItem = async (key) => {
-  let value = await AsyncStorage.getItem(key);
-  return value;
-};
-
 const Profile = () => {
   const navigation = useNavigation();
   const [modalVisible, setModalVisible] = useState(false);
-  const [user, setUser] = useState(null);
-  const [token, setToken] = useState(async () => {
-    let token = await getStorageItem("@authtoken");
-    console.log(token);
-    return token;
+  const [user, setUser] = useState({
+    displayName: "",
+    googleId: "",
+    profileImage: "",
+    username: "",
+    _id: "",
+    is_admin: false,
   });
+  const [token, setToken] = useState(null);
+  const [is_authenticated, setIsAuthenticated] = useState(false);
+  const [userLoaded, setUserLoaded] = useState(false);
   const [title, setTitle] = useState("");
 
   useEffect(() => {
     Linking.addEventListener("url", ({ url }) => {
       const token = url.match(/token=([^#]+)/);
       // setUser(token[1]);
-      setToken(token[1]);
+      setIsAuthenticated(true);
+      setStorageItem("@token", token[1]);
+    });
+
+    AsyncStorage.getItem("@token").then((value) => {
+      setToken(value);
+
+      fetch(`${config.serverUrl}` + "/users/profile", {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${value}`,
+        },
+      })
+        .then((res) => res.json())
+        .then((user_profile) => {
+          setUser(user_profile);
+          setUserLoaded(true);
+        });
     });
 
     return () => {
@@ -54,10 +72,9 @@ const Profile = () => {
       `${config.serverUrl}/users/auth/google`,
       { showInRecents: true }
     );
-    console.log(result);
   };
 
-  if (token === null) {
+  if (!is_authenticated) {
     return (
       <View style={{ flex: 1 }}>
         <Header />
@@ -79,6 +96,14 @@ const Profile = () => {
     );
   }
 
+  if (!userLoaded) {
+    return (
+      <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
+        <DataLoading />
+      </View>
+    );
+  }
+
   return (
     <View>
       <Header />
@@ -91,8 +116,7 @@ const Profile = () => {
       >
         <Avatar.Image
           source={{
-            uri:
-              "https://static.toiimg.com/thumb/msid-56833673,width-1200,height-900,resizemode-4/.jpg",
+            uri: user.profileImage,
           }}
           size={150}
         />
@@ -118,7 +142,7 @@ const Profile = () => {
             />
           )}
           title="Name"
-          description={user}
+          description={user.displayName}
         />
         <List.Item
           left={(props) => (
@@ -138,7 +162,7 @@ const Profile = () => {
             />
           )}
           title="Email"
-          description="rohit20001221@gmail.com"
+          description={user.username}
         />
         <List.Item
           left={(props) => (
@@ -158,8 +182,22 @@ const Profile = () => {
             />
           )}
           title="Mobile"
-          description="9515793306"
+          description={user?.mobile}
         />
+        <View style={{ alignItems: "center", marginTop: 50 }}>
+          <Button
+            onPress={() => {
+              AsyncStorage.removeItem("@token").then(() => {
+                setToken(null);
+                setUser(null);
+              });
+            }}
+            style={{ backgroundColor: "red" }}
+            mode="contained"
+          >
+            Logout
+          </Button>
+        </View>
       </List.Section>
       <Modal transparent visible={modalVisible} animationType="fade">
         <View style={{ flex: 1, justifyContent: "flex-end" }}>
@@ -179,6 +217,7 @@ const Profile = () => {
 
             <Button
               style={{ marginVertical: 10, backgroundColor: "black" }}
+              onPress={() => {}}
               mode="contained"
             >
               Save
