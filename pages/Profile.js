@@ -9,30 +9,55 @@ import {
   Button,
   IconButton,
 } from "react-native-paper";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useNavigation } from "@react-navigation/native";
 import { FontAwesome } from "@expo/vector-icons";
 import { MaterialIcons } from "@expo/vector-icons";
+import * as WebBrowser from "expo-web-browser";
 import Header from "../components/Header";
 import { config } from "../config";
+
+const setStorageItem = async (key, value) => {
+  await AsyncStorage.setItem(key, value);
+};
+
+const getStorageItem = async (key) => {
+  let value = await AsyncStorage.getItem(key);
+  return value;
+};
 
 const Profile = () => {
   const navigation = useNavigation();
   const [modalVisible, setModalVisible] = useState(false);
   const [user, setUser] = useState(null);
+  const [token, setToken] = useState(async () => {
+    let token = await getStorageItem("@authtoken");
+    console.log(token);
+    return token;
+  });
   const [title, setTitle] = useState("");
 
   useEffect(() => {
     Linking.addEventListener("url", ({ url }) => {
       const token = url.match(/token=([^#]+)/);
-      setUser(token[1]);
+      // setUser(token[1]);
+      setToken(token[1]);
     });
 
     return () => {
       Linking.removeEventListener("url");
     };
-  }, []);
+  }, [token]);
 
-  if (!user) {
+  const startAuthentication = async () => {
+    let result = await WebBrowser.openBrowserAsync(
+      `${config.serverUrl}/users/auth/google`,
+      { showInRecents: true }
+    );
+    console.log(result);
+  };
+
+  if (token === null) {
     return (
       <View style={{ flex: 1 }}>
         <Header />
@@ -42,7 +67,8 @@ const Profile = () => {
           <Button
             style={{ backgroundColor: "red" }}
             onPress={() => {
-              Linking.openURL(`${config.serverUrl}/users/auth/google`);
+              // Linking.openURL(`${config.serverUrl}/users/auth/google`);
+              startAuthentication();
             }}
             mode="contained"
           >

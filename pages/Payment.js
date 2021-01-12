@@ -18,7 +18,10 @@ const Payment = () => {
         source={{ uri: config.serverUrl + "/payment" }}
         javaScriptEnabled={true}
         onNavigationStateChange={(webViewState) => {
-          if (webViewState.url === config.serverUrl + "/") {
+          if (
+            webViewState.url === config.serverUrl + "/accept_payment" ||
+            webViewState.url === config.serverUrl + "/"
+          ) {
             navigation.navigate("cart");
           }
         }}
