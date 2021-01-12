@@ -22,17 +22,19 @@ const setStorageItem = async (key, value) => {
   await AsyncStorage.setItem(key, value);
 };
 
+const default_user_params = {
+  displayName: "",
+  googleId: "",
+  profileImage: "",
+  username: "",
+  _id: "",
+  is_admin: false,
+};
+
 const Profile = () => {
   const navigation = useNavigation();
   const [modalVisible, setModalVisible] = useState(false);
-  const [user, setUser] = useState({
-    displayName: "",
-    googleId: "",
-    profileImage: "",
-    username: "",
-    _id: "",
-    is_admin: false,
-  });
+  const [user, setUser] = useState(default_user_params);
   const [token, setToken] = useState(null);
   const [is_authenticated, setIsAuthenticated] = useState(false);
   const [userLoaded, setUserLoaded] = useState(false);
@@ -44,22 +46,41 @@ const Profile = () => {
       // setUser(token[1]);
       setIsAuthenticated(true);
       setStorageItem("@token", token[1]);
+      AsyncStorage.getItem("@token").then((value) => {
+        setToken(value);
+
+        if (value) {
+          fetch(`${config.serverUrl}` + "/users/profile", {
+            method: "GET",
+            headers: {
+              Authorization: `Bearer ${value}`,
+            },
+          })
+            .then((res) => res.json())
+            .then((user_profile) => {
+              setUser(user_profile);
+              setUserLoaded(true);
+            });
+        }
+      });
     });
 
     AsyncStorage.getItem("@token").then((value) => {
       setToken(value);
 
-      fetch(`${config.serverUrl}` + "/users/profile", {
-        method: "GET",
-        headers: {
-          Authorization: `Bearer ${value}`,
-        },
-      })
-        .then((res) => res.json())
-        .then((user_profile) => {
-          setUser(user_profile);
-          setUserLoaded(true);
-        });
+      if (value) {
+        fetch(`${config.serverUrl}` + "/users/profile", {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${value}`,
+          },
+        })
+          .then((res) => res.json())
+          .then((user_profile) => {
+            setUser(user_profile);
+            setUserLoaded(true);
+          });
+      }
     });
 
     return () => {
@@ -189,7 +210,9 @@ const Profile = () => {
             onPress={() => {
               AsyncStorage.removeItem("@token").then(() => {
                 setToken(null);
-                setUser(null);
+                setUserLoaded(false);
+                setIsAuthenticated(false);
+                setUser(default_user_params);
               });
             }}
             style={{ backgroundColor: "red" }}
