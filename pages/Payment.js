@@ -17,6 +17,7 @@ const Payment = () => {
         style={{ flex: 1 }}
         source={{ uri: config.serverUrl + "/payment" }}
         javaScriptEnabled={true}
+        originWhitelist={["*"]}
         onNavigationStateChange={(webViewState) => {
           if (
             webViewState.url === config.serverUrl + "/accept_payment" ||

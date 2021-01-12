@@ -7,6 +7,7 @@ import { useStateValue } from "../StateProvider";
 import { useNavigation } from "@react-navigation/native";
 import { config } from "../config";
 import { getSubtotal } from "../reducer";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 // import * as Linking from "expo-linking";
 // import { config } from "../config";
 
@@ -65,18 +66,29 @@ const Cart = () => {
           style={{ backgroundColor: "black", borderRadius: 0, padding: 10 }}
           mode="contained"
           onPress={() => {
-            // Linking.openURL(`${config.serverUrl}/payment`);
-            // navigation.navigate("payment");
-            fetch(config.serverUrl + "/generate_payment", {
-              method: "POST",
-              body: JSON.stringify({ amount: getSubtotal(cart) }),
-              headers: { "Content-Type": "application/json" },
-            })
-              .then((res) => res.json())
-              .then((data) => {
-                // console.log(data)
-                navigation.navigate("payment", { order_id: data.order_id });
-              });
+            AsyncStorage.getItem("@token").then((token) => {
+              let data = cart.map((item) => ({
+                product: item.id,
+                quantity: item.quantity,
+              }));
+
+              data = { products: data };
+
+              fetch(config.serverUrl + "/orders/create", {
+                method: "POST",
+                body: JSON.stringify(data),
+                headers: {
+                  "Content-Type": "application/json",
+                  Authorization: `Bearer ${token}`,
+                },
+              })
+                .then((res) => res.json())
+                .then((data) => {
+                  navigation.navigate("payment", {
+                    order_id: data.order_id,
+                  });
+                });
+            });
           }}
         >
           Proceed to pay
