@@ -248,7 +248,9 @@ const Profile = () => {
 
             <Button
               style={{ marginVertical: 10, backgroundColor: "black" }}
-              onPress={() => {}}
+              onPress={() => {
+                console.log(token);
+              }}
               mode="contained"
             >
               Save
