@@ -11,7 +11,7 @@ import {
 } from "react-native-paper";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import DataLoading from "../components/DataLoading";
-import { useNavigation } from "@react-navigation/native";
+// import { useNavigation } from "@react-navigation/native";
 import { FontAwesome } from "@expo/vector-icons";
 import { MaterialIcons } from "@expo/vector-icons";
 import * as WebBrowser from "expo-web-browser";
@@ -32,7 +32,7 @@ const default_user_params = {
 };
 
 const Profile = () => {
-  const navigation = useNavigation();
+  // const navigation = useNavigation();
   const [modalVisible, setModalVisible] = useState(false);
   const [user, setUser] = useState(default_user_params);
   const [token, setToken] = useState(null);
@@ -58,6 +58,7 @@ const Profile = () => {
           })
             .then((res) => res.json())
             .then((user_profile) => {
+              setIsAuthenticated(true);
               setUser(user_profile);
               setUserLoaded(true);
             });
@@ -75,11 +76,19 @@ const Profile = () => {
             Authorization: `Bearer ${value}`,
           },
         })
-          .then((res) => res.json())
+          .then((res) => {
+            if (res.status === 401) {
+              throw new Error("unauthorized");
+            } else {
+              return res.json();
+            }
+          })
           .then((user_profile) => {
+            setIsAuthenticated(true);
             setUser(user_profile);
             setUserLoaded(true);
-          });
+          })
+          .catch((err) => {});
       }
     });
 
@@ -90,8 +99,7 @@ const Profile = () => {
 
   const startAuthentication = async () => {
     let result = await WebBrowser.openBrowserAsync(
-      `${config.serverUrl}/users/auth/google`,
-      { showInRecents: true }
+      `${config.serverUrl}/users/auth/google`
     );
   };
 
