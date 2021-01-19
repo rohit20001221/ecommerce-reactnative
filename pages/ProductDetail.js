@@ -13,12 +13,6 @@ import { config } from "../config";
 import DataLoading from "../components/DataLoading";
 import { useStateValue } from "../StateProvider";
 
-var images = [
-  "https://image1.pricedekho.com/p/3/9/49/2492749/10449333-dell-15-5559-ci34gb1tbwin10156-inches-red-picture-large.jpg",
-  "https://image2.pricedekho.com/p/3/3/13/1833513/4568963-dell-inspiron-3543-notebook-5th-gen-ci5-8gb-1tb-win81-2gb-graph-x560333in9-39624-cm-black-picture-big.jpg?tr=w-420",
-  "https://image1.pricedekho.com/p/3/0/70/3027270/38018653-lenovo-ideapad-500-80nt00pain-notebook-picture-big.jpg?tr=w-420",
-];
-
 const ProductDetail = () => {
   const [snackVisible, setSnackVisible] = useState(false);
   const [dataLoaded, setDataLoaded] = useState(false);
