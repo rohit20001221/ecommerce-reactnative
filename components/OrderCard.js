@@ -28,6 +28,8 @@ const styles = StyleSheet.create({
   container: {
     padding: 10,
     backgroundColor: "white",
+    elevation: 1,
+    marginBottom: 10,
   },
   bold: {
     fontWeight: "bold",
