@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { View, ScrollView, SafeAreaView } from "react-native";
 import { LogBox } from "react-native";
-import { Searchbar } from "react-native-paper";
 import DataLoading from "../components/DataLoading";
 import ProductGridCard from "../components/ProductGridCard";
 import { config } from "../config";
@@ -26,7 +25,6 @@ const Home = () => {
 
   return (
     <SafeAreaView>
-      <Searchbar style={{ borderRadius: 0, elevation: 1 }} />
       <ScrollView contentContainerStyle={{ padding: 10 }}>
         {categories.map((item) => {
           return (
